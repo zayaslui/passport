@@ -39,9 +39,3 @@ Route::post('/client/posts', function (Request $request) {
 
 
 Route::get('/posts-all', [App\Http\Controllers\PostController::class, 'index']);
-
-Route::group(['prefix' => 'secure'], function () {
-
-    Route::post('/login', 'App\Http\Controllers\Auth\FuckingAuthController@register');
-
-});
