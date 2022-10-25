@@ -39,3 +39,9 @@ Route::post('/client/posts', function (Request $request) {
 
 
 Route::get('/posts-all', [App\Http\Controllers\PostController::class, 'index']);
+
+
+//definir metodos para los clientes
+Route::group(['middleware' => 'client'], function () {
+    Route::post('/logout', [App\Http\Controllers\PostController::class, 'logout']);    
+});

@@ -12,4 +12,8 @@ class ClientController extends Controller
     	$clients = \App\Models\Client::where('user_id', Auth::user()->id)->get();
     	return view('client', compact('clients'));
     }
+
+    public function logout(Request $request){
+        
+    }
 }
