@@ -1,47 +1,30 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Models\Post;
 
 /*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
+Route::group(['prefix' => 'public'], function () {
+    
+    //create token
+    //Route::post('/getClientCrendentialsGrantToken'  , 'App\Http\Controllers\Auth\FuckingAuthController@getClientCrendentialsGrantToken');
+    //Route::post('/getPersonalAccessToken'           , 'App\Http\Controllers\Auth\FuckingAuthController@getPersonalAccessToken');
+    
+    Route::post('/getPasswordGrantToken'              , [App\Http\Controllers\Auth\FuckingAuthController::class, 'getPasswordGrantToken']);
+    Route::post('/getRegister'                        , [App\Http\Controllers\Auth\FuckingAuthController::class, 'getRegister']);
+    Route::post('/getLogin'                           , [App\Http\Controllers\Auth\FuckingAuthController::class, 'getLogin']);
+    
+});
+
+// se definen todos los endpoints de cualquier REST estaran con un middleware de checktoken
+Route::group(['prefix' => 'secure/rest', 'middleware' => 'auth:api'], function () {
+    
+    //administracion de usuario
+    Route::get('/obtenerPosts'                        ,[App\Http\Controllers\ClientsResourcesController::class,  'obtenerPosts']);
+    
+});
+//->middleware('auth:api');
+
+Route::group(['prefix' => 'secure/auth', 'middleware' => 'auth:api'], function () {
+    Route::post('/getLogout'                          , [App\Http\Controllers\Auth\FuckingAuthController::class, 'getLogout']);
+});
 */
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::get('/posts', function () {
-    return Post::all();
-})->middleware('auth:api');
-
-//solo los clientes autorizados
-Route::get('/client/posts', function () {
-    return Post::all();
-})->middleware('client');
-
-//solo los clientes autorizados
-Route::post('/client/posts', function (Request $request) {
-    Post::create([
-        'title' => $request -> input('title'),
-        'body'  => $request -> input('body')
-    ]);
-    return ['status' => 200];
-})->middleware('client');
-
-
-Route::get('/posts-all', [App\Http\Controllers\PostController::class, 'index']);
-
-
-//definir metodos para los clientes
-Route::group(['middleware' => 'client'], function () {
-    Route::post('/logout', [App\Http\Controllers\PostController::class, 'logout']);    
-});

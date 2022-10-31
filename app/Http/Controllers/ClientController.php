@@ -13,7 +13,4 @@ class ClientController extends Controller
     	return view('client', compact('clients'));
     }
 
-    public function logout(Request $request){
-        
-    }
 }
